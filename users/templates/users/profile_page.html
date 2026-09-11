@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Profile | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <link rel="stylesheet" href="{% static 'profile_style.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_responsive.css' %}">
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body,
+        html {
+
+            margin: 0;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal;
+            /* Allow text to wrap within the button */
+            word-wrap: break-word;
+            /* Break long words if necessary */
+            font-size: 16px;
+            /* Adjust the font size as needed */
+        }
+        .profile{
+            display: flex;
+            justify-content: center;
+        }
+        .profile_content{
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .profile_content img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s;
+        }
+        .profile_content:hover img{
+            scale: 1.1;
+        }
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%;
+                /* Make the button full width on smaller screens */
+            }
+        }
+    </style>
+</head>
+{% block preloader %}
+{% include 'preloader.html' %}
+{% endblock preloader %}
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+
+            {% block sidebar %}
+            {% include 'users/sidebar.html' %}
+            {% endblock %}
+
+        </div>
+        <!-- aside end -->
+
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'users/navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+
+            <!--Start from here-->
+
+
+            <div class="body">
+                <div class="profile_container">
+
+
+                    <section class="userProfile card">
+                        <div class="profile">
+                            <div class="profile_content">
+                                <img src="{{ user_data.profile_picture }}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <section class="work_skills card">
+
+                        <div class="work">
+                            <h1 class="heading">IEEE Info</h1>
+                            <div class="ieee_basic_info">
+                                <h1>{{ user_data.joining_session }}</h1>
+                                <p>Joining Session</p>
+                            </div>
+
+                            <div class="ieee_basic_info">
+                                <h1>{{ user_data.last_renewal }}</h1>
+                                <p>Last Renewal</p>
+                            </div>
+                            {% if active_status %}
+                            <div class="ieee_basic_info">
+                                <h1 style="color:green;font-weight: 600;">Active</h1>
+                                <p>Account Status</p>
+                            </div>
+                            {% else %}
+                            <div class="ieee_basic_info">
+                                <h1 style="color:red;font-weight: 600;">Expired</h1>
+                                <p>Account Status</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+
+
+                    <section class="userDetails card">
+                        <div class="userName">
+                            <h1 class="name">{{ user_data.name }}</h1>
+                            <p>{{ user_data.position }}</p>
+                        </div>
+
+                        <div class="rank">
+                            <h1 class="heading">IEEE ID</h1>
+                            <span>{{ user_data.ieee_id }}</span>
+                        </div>
+                        <div class="rank">
+                            <h1 class="heading">Team</h1>
+                            <span>{{ user_data.team }}</span>
+                        </div>
+                        <div class="rank">
+                            <h1 class="heading">IEEE Mail</h1>
+                            <span>{{ user_data.email_ieee }}</span>
+                        </div>
+                    </section>
+
+
+                    <section class="timeline_about card">
+                        <div class="tabs">
+                            <ul>
+                                <li class="about active">
+                                    <i class="ri-user-3-fill ri"></i>
+                                    <span>Personal Info</span>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="basic_info">
+                            <ul>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Address:</h1>
+                                    <span class="basic_info_info">{{ user_data.home_address }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Email:</h1>
+                                    <span class="basic_info_info">{{ user_data.email_personal }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Contact:</h1>
+                                    <span class="basic_info_info">{{ user_data.contact_no }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Blood Group:</h1>
+                                    <span class="basic_info_info">{{ user_data.blood_group }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Date of Birth:</h1>
+                                    <span class="basic_info_info">{{ user_data.dob }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Gender:</h1>
+                                    <span class="basic_info_info">{{ user_data.gender }}</span>
+                                </li>
+                                <li class="list">
+                                    <h1 class="basic_info_label">Major in NSU:</h1>
+                                    <span class="basic_info_info">{{ user_data.major }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+        {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Update Profile | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body,
+        html {
+
+            margin: 0;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal;
+            /* Allow text to wrap within the button */
+            word-wrap: break-word;
+            /* Break long words if necessary */
+            font-size: 16px;
+            /* Adjust the font size as needed */
+        }
+
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%;
+                /* Make the button full width on smaller screens */
+            }
+        }
+
+        /* settings */
+
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 10px;
+        }
+
+        .container {
+            position: relative;
+            max-width: 780px;
+            width: 100%;
+            background: #fff;
+            border-radius: 4px;
+            padding: 30px;
+            margin: 0 20px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .container label {
+            position: relative;
+            font-size: 0.9rem;
+        }
+        
+        .input-img{
+            margin-bottom: 15px;
+            height: 40px;
+            width: 100%;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .input {
+            margin-bottom: 15px;
+            height: 40px;
+            width: 100%;
+            border: 2px solid #d3d3d3;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            outline: none;
+            padding: 0 16px 0 16px;
+        }
+        .profile{
+            display: flex;
+            justify-content: center;
+        }
+        .profile_content{
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .profile_content img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile_info{
+            display: flex;
+            column-gap: 10px;
+            justify-content: space-between;
+        }
+        @media screen and (max-width:520px) {
+            .profile_info{
+                flex-direction: column;
+            }
+        }
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            border-top: 8px solid #050D3A; /* Customize animation color */
+            animation: spin 1s linear infinite;
+          }
+          
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+    </style>
+</head>
+{% block preloader %}
+    {% include 'preloader.html' %}
+{% endblock preloader %}
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+
+            {% block sidebar %}
+            {% include 'users/sidebar.html' %}
+            {% endblock %}
+
+        </div>
+        <!-- aside end -->
+
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+        {% block navbar %}
+            {% include 'users/navbar.html' %}
+        {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+
+            <!--Start from here-->
+            <div class="body">
+                <div class="container">
+                    <form method="post" id="profile-form" enctype="multipart/form-data" style="padding: 0 5%;">
+                        {% csrf_token %}
+                        <h2 style="font-weight: 600;
+                        text-align: center;
+                        margin-bottom: 20px;
+                        text-transform: uppercase;">Update Profile</h2>
+                        <div style="text-align:center">
+                            {% for message in messages %}
+                            <p>{{message}}</p>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="profile">
+                            <div class="profile_content">
+                                <img src="{{ user_data.profile_picture }}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                            </div>
+                        </div>
+                        <label for="image-upload">Update your profile picture</label> 
+                        <input class="input-img" name="profile_picture" type="file" id="image-upload" accept="image/*">
+                        <p id="error-message" style="color: red;"></p>
+
+                        <br>
+                        <div class="profile_info">
+                            {% if user_data.is_admin_user %}
+                            <div>
+                                <label for="name">Full Name</label>
+                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                                
+                            </div>
+                            <div>
+                                <label for="email">Email</label>
+                                <input class="input" type="email" name="email" value="{{ user_data.email }}" required><br>
+                            </div>
+                            {% else %}
+                            <div>
+                                <label for="name">Full Name</label>
+                                <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                   
+                                <label for="address">Address</label>
+                                <input class="input" type="text" name="address" value="{{ user_data.home_address }}"><br>
+                                <label for="email_personal">Personal Email</label>
+                                <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}"><br>
+                                <label for="blood_group">Blood Group</label>
+                                <select class="form-control" style="border: 2px solid #d3d3d3;border-radius: 4px;" name="blood_group" value="{{ user_data.blood_group }}" required>
+                                    <option value="None" disabled {% if user_data.blood_group == "None" %}selected{% endif %}>-------------------</option>
+                                    <option value="A+" {% if user_data.blood_group == "A+" %}selected{% endif %}>A+</option>
+                                    <option value="A-" {% if user_data.blood_group == "A-" %}selected{% endif %}>A-</option>
+                                    <option value="B+" {% if user_data.blood_group == "B+" %}selected{% endif %}>B+</option>
+                                    <option value="B-" {% if user_data.blood_group == "B-" %}selected{% endif %}>B-</option>
+                                    <option value="O+" {% if user_data.blood_group == "O+" %}selected{% endif %}>O+</option>
+                                    <option value="O-" {% if user_data.blood_group == "O-" %}selected{% endif %}>O-</option>
+                                    <option value="AB+" {% if user_data.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                                    <option value="AB-" {% if user_data.blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                                </select><br>
+                                <label for="email_nsu">NSU Email</label>
+                                <input class="input" type="email" name="email_nsu" value="{{ user_data.email_nsu }}" required><br>
+                                <label for="contact_no">Contact</label>
+                                <input class="input" type="phone" name="contact_no" value="{{ user_data.contact_no }}" required><br>
+                                <label for="linkedin_url">Linkedin Profile Link</label>
+                                <input class="input" type="url" name="linkedin_url" value="{{ user_data.linkedin_url }}"><br>
+                            </div>
+                            <div>
+                                <label for="nsu_id">NSU ID</label>
+                                <input class="input" type="text" name="nsu_id" value="{{ user_data.nsu_id }}" required><br>
+                                <label for="dob">Date of Birth</label>
+                                <input class="input" type="date" name="dob" value="{{ user_data.dob | safe}}"><br>
+                                <label for="gender">Gender</label>
+                                <input class="input" type="text" name="gender" placeholder="Male or Female" value="{{ user_data.gender }}" required><br>
+                                <label for="email_ieee">IEEE Mail</label>
+                                <input class="input" type="email" name="email_ieee" value="{{ user_data.email_ieee }}"><br>
+                                <label for="major">Major in NSU</label>
+                                <input class="input" type="text" name="major" value="{{ user_data.major }}" required><br>
+                                <label for="facebook_url">Facebook Profile Link</label>
+                                <input class="input" type="url" name="facebook_url" value="{{ user_data.facebook_url }}"><br>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+
+                        <div style="
+                        column-gap: 10px;
+                        display: flex;
+                        justify-content: center;
+                        ">
+                            <button class="btn" type="submit" style="background-color: #050D3A;
+                            color: #fff;"  id="update-button">Update</button>
+                            <a class="btn" href="{% url 'users:profile' %}" style="    background-color: #FFA300;
+                            color: #000000;">Cancel</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div id="loader" style="display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1028;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;">
+            <div class="loading-spinner"></div>
+          </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+        {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+
+    </div>
+    <!-- app end-->
+
+    {% if user_data.is_admin_user %}
+    <script>
+        document.getElementById('update-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const form = document.getElementById('profile-form'); // Change class selector to id selector
+            
+            // Check if form is correctly selected
+            if (!(form instanceof HTMLFormElement)) {
+                console.error('Form element not found or is not a valid HTMLFormElement.');
+                return;
+            }
+            
+            const name = form.querySelector('input[name="name"]');
+            const emailPersonal = form.querySelector('input[name="email"]');
+            
+            const loader = document.getElementById('loader'); // Loader
+            const fileInput = document.getElementById('image-upload'); // File input for image upload
+            
+            let isValid = true;
+            let errorMessage = '';
+    
+            function isEmailValid(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function isNotNone(value, fieldName) {
+                if (value === null || value.trim() === '' || value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be empty or None.\n`;
+                }
+            }
+            console.log(emailPersonal);
+            isNotNone(name.value.trim(), 'Full Name');
+            isNotNone(emailPersonal.value.trim(), 'Personal Email');
+
+            if (emailPersonal && !isEmailValid(emailPersonal.value.trim())) {
+                isValid = false;
+                errorMessage += 'Personal Email is invalid.\n';
+            }
+            
+            // File size validation
+            const fileSize = fileInput.files.length > 0 ? fileInput.files[0].size : 0;
+            const maxSize = 4194304 * 1024 * 1024; // Convert MB to bytes
+            
+            if (fileSize > maxSize) {
+                isValid = false;
+                errorMessage += 'File size exceeds ' + (maxSize / (1024 * 1024)) + ' MB. Please choose a smaller photo or resize it!\n';
+            }
+    
+            if (isValid) {
+                console.log('Form is valid, submitting...');
+    
+                // Show loader before form submission
+                loader.style.display = 'flex'; 
+            
+                // Submit the form
+                form.submit();
+            } else {
+                alert('Form validation failed:\n' + errorMessage); // Show errors as alert
+            }
+        });
+    </script>
+
+    {% else %}
+    <script>
+        document.getElementById('update-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const form = document.getElementById('profile-form'); // Change class selector to id selector
+            
+            // Check if form is correctly selected
+            if (!(form instanceof HTMLFormElement)) {
+                console.error('Form element not found or is not a valid HTMLFormElement.');
+                return;
+            }
+            
+            const name = form.querySelector('input[name="name"]');
+            const emailPersonal = form.querySelector('input[name="email_personal"]');
+            const nsuEmail = form.querySelector('input[name="email_nsu"]');
+            const contactNo = form.querySelector('input[name="contact_no"]');
+            const linkedinUrl = form.querySelector('input[name="linkedin_url"]');
+            const nsuId = form.querySelector('input[name="nsu_id"]');
+            const dob = form.querySelector('input[name="dob"]');
+            const gender = form.querySelector('input[name="gender"]');
+            const ieeeEmail = form.querySelector('input[name="email_ieee"]');
+            const major = form.querySelector('input[name="major"]');
+            const facebookUrl = form.querySelector('input[name="facebook_url"]');
+            const loader = document.getElementById('loader'); // Loader
+            const fileInput = document.getElementById('image-upload'); // File input for image upload
+            
+            let isValid = true;
+            let errorMessage = '';
+    
+            function isEmailValid(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function isPhoneValid(phone) {
+                const phoneRegex = /^[0-9+]{10,16}$/;
+                return phoneRegex.test(phone);
+            }
+    
+            function isDateValid(date) {
+                return !isNaN(Date.parse(date));
+            }
+    
+            function isNsuEmailValid(email) {
+                return email.endsWith('@northsouth.edu');
+            }
+    
+            function isIeeeEmailValid(email) {
+                return email.endsWith('@ieee.org');
+            }
+    
+            function isNumeric(value) {
+                return /^\d+$/.test(value);
+            }
+    
+            function isGenderValid(gender) {
+                const genderLower = gender;
+                return genderLower === 'Male' || genderLower === 'Female';
+            }
+    
+            function isNotNone(value, fieldName) {
+                if (value === null || value.trim() === '' || value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be empty or None.\n`;
+                }
+            }
+            function isNotOnlyNone(value, fieldName) {
+                if (value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be None.\n`;
+                }
+            }
+    
+            isNotNone(name.value.trim(), 'Full Name');
+            isNotNone(nsuId.value.trim(), 'NSU ID');
+            isNotNone(emailPersonal.value.trim(), 'Personal Email');
+            isNotNone(nsuEmail.value.trim(), 'NSU Email');
+            isNotNone(gender.value.trim(), 'Gender');
+            isNotNone(major.value.trim(), 'Major');
+            isNotNone(contactNo.value.trim(), 'Contact Number');
+            isNotOnlyNone(linkedinUrl.value.trim(), 'LinkedIn URL');
+            isNotOnlyNone(facebookUrl.value.trim(), 'FaceBook URL');
+            isNotOnlyNone(ieeeEmail.value.trim(), 'IEEE Email');
+            
+            if (emailPersonal && !isEmailValid(emailPersonal.value.trim())) {
+                isValid = false;
+                errorMessage += 'Personal Email is invalid.\n';
+            }
+            if (nsuEmail && !isNsuEmailValid(nsuEmail.value.trim())) {
+                isValid = false;
+                errorMessage += 'NSU Email must end with @northsouth.edu.\n';
+            }
+            if (contactNo && !isPhoneValid(contactNo.value.trim())) {
+                isValid = false;
+                errorMessage += 'Contact Number is invalid.\n';
+            }
+            if (nsuId && (!isNumeric(nsuId.value.trim()) || nsuId.value.trim() === '')) {
+                isValid = false;
+                errorMessage += 'NSU ID must be all digits.\n';
+            }
+            if (dob && !isDateValid(dob.value.trim())) {
+                isValid = false;
+                errorMessage += 'Date of Birth is invalid.\n';
+            }
+            if (gender && !isGenderValid(gender.value.trim())) {
+                isValid = false;
+                errorMessage += 'Gender must be either Male or Female.\n';
+            }
+            if (ieeeEmail.value != "" && !isIeeeEmailValid(ieeeEmail.value.trim())) {
+                isValid = false;
+                errorMessage += 'IEEE Email must end with @ieee.org.\n';
+            }
+            if (linkedinUrl && linkedinUrl.value.trim() !== '' && !linkedinUrl.value.trim().startsWith('https://')) {
+                isValid = false;
+                errorMessage += 'LinkedIn URL must start with https://.\n';
+            }
+            if (facebookUrl && facebookUrl.value.trim() !== '' && !facebookUrl.value.trim().startsWith('https://')) {
+                isValid = false;
+                errorMessage += 'Facebook URL must start with https://.\n';
+            }
+            
+            // File size validation
+            const fileSize = fileInput.files.length > 0 ? fileInput.files[0].size : 0;
+            const maxSize = 4194304 * 1024 * 1024; // Convert MB to bytes
+            
+            if (fileSize > maxSize) {
+                isValid = false;
+                errorMessage += 'File size exceeds ' + (maxSize / (1024 * 1024)) + ' MB. Please choose a smaller photo or resize it!\n';
+            }
+    
+            if (isValid) {
+                console.log('Form is valid, submitting...');
+    
+                // Show loader before form submission
+                loader.style.display = 'flex'; 
+            
+                // Submit the form
+                form.submit();
+            } else {
+                alert('Form validation failed:\n' + errorMessage); // Show errors as alert
+            }
+        });
+    </script>
+    {% endif %}
+    
+    
+    
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+
+</html>
