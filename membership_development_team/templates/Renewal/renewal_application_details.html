@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Renewal - {{name}} | Membership Development Team</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        body, html {
+        
+        margin: 0;
+        
+        align-items: center;
+        justify-content: center;
+        }
+
+        .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+          .btn-container {
+            text-align: center;
+          }
+          
+          .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+          }
+          
+          /* Media query for smaller screens (adjust the breakpoint as needed) */
+          @media (max-width: 768px) {
+            .btn {
+              width: 100%; /* Make the button full width on smaller screens */
+            }
+          }
+          .items{
+            font-size:18px;
+          }
+          .image_icon{
+            padding:10px;
+            
+          }
+          .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+          .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+          }
+          
+          .image-button:hover + .tooltip-text {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(10px); /* Adjust the distance from the link */
+          }
+          
+          .tooltip-text {
+              position: absolute;
+              top: 50%;
+              left: 100%;
+              transform: translateY(-50%);
+              white-space: nowrap;
+              background-color: #333;
+              color: #fff;
+              padding: 5px;
+              border-radius: 5px;
+              opacity: 0;
+              visibility: hidden;
+              transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+          }
+          .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %}
+                {% include 'mdt_navbar.html' %}
+            {% endblock navbar %}
+
+        </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
+
+            <br>
+
+            <div class="tooltip-container">
+                <a href="{% url 'membership_development_team:renewal_session_data' pk %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back to Recruited Members Page</span>
+            </div>
+
+            {% if has_next_request %}
+            <div class="tooltip-container right">
+            <a href="{% url "membership_development_team:request_details" pk next_request_id %}" class="image-button">
+                <img src="{% static 'back-arrow.png' %}" alt="Next Recruited Member" style="transform: rotate(180deg);">
+            </a>
+            <span class="tooltip-text">Go to Next Renewal Application</span>
+            </div>
+            {% endif %}
+
+            <!--Start from here-->
+            <br>
+            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Renewal Application Details of - <span style="color:#00629B;"> <b>{{name}}</b></span></h2>
+            <br>
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <!--Messages-->
+            <!--Data Table Start-->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box">
+                    <div class="box-header">
+                        <small>Renewal Details collected from the Application Form are given here.</small>
+                    </div>
+                    <div class="box-divider m-0">
+
+                    </div>
+                        <div class="box-body">
+                        
+                            {% for details in details %}
+
+                                <p class="items"><span><b>IEEE ID: </b></span>{{details.ieee_id}} </p>
+                                <p class="items"><span><b>NSU ID: </b></span>{{details.nsu_id}} </p>
+                                <p class="items"><span><b>Name: </b></span>{{details.name}} </p>
+                                <p class="items"><span><b>Email (Associated with IEEE Account): </b></span>{{details.email_associated}} </p>
+                                <p class="items"><span><b>IEEE Email: </b></span>{{details.email_ieee}} </p>
+                                <p class="items"><span><b>Contact No: </b></span>{{details.contact_no}} </p>
+                                <p class="items"><span><b>Account Password: </b></span>{{details.ieee_account_password}} </p>
+                                <p class="items"><span><b>Applicant Comment: </b></span>{{details.comment}} </p>
+                            
+                            {% endfor %}    
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="box">
+                    <div class="box-header">
+                        <small>Renewal Payment and Criteria Details collected from the Application Form are given here.</small>
+                    </div>
+                    <div class="box-divider m-0">
+
+                    </div>
+                        <div class="box-body">
+                        
+                            {% for details in details %}
+
+                                <p class="items"><span><b>IEEE Membership: </b></span>
+                                    {% if details.ieee_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE PES Membership: </b></span> 
+                                    {% if details.pes_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE RAS Membership: </b></span> 
+                                    {% if details.ras_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>                                
+                                <p class="items"><span><b>IEEE IAS Membership: </b></span> 
+                                    {% if details.ias_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                <p class="items"><span><b>IEEE WIE Membership: </b></span> 
+                                    {% if details.wie_renewal_check %}
+                                        <img class="image_icon" src="/static/admin/img/icon-yes.svg" alt="True">
+                                    {% else %}
+                                        <img class="image_icon" src="/static/admin/img/icon-no.svg" alt="False">
+                                    {% endif %}
+                                </p>
+                                {% comment %} <p class="items"><span><b>Transaction ID: </b></span>{{details.transaction_id}} </p> {% endcomment %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {% if has_comment %}
+                                        <div class="form-group row">
+                                            <label style="font-size:18px;" for="inputPassword3" class="col-sm-2 form-control-label">MDT Comment:</label>
+                                            <div class="col-sm-10">
+                                            <textarea placeholder="For MDT Use Only" name="official_comment" class="form-control" rows="2">{{details.official_comment}}</textarea>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-group row">
+                                            <label style="font-size:18px;" for="inputPassword3" class="col-sm-2 form-control-label">Comment:</label>
+                                            <div class="col-sm-10">
+                                            <textarea placeholder="For MDT Use Only" name="official_comment" class="form-control" rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div style="justify-content:center; text-align:center;"> 
+                                        <input type="submit" class="btn btn-outline b-primary text-primary" name="update_comment" value="Update Comment"></input>
+                                    </div>
+                                </form>
+                            {% endfor %}    
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Data Table End-->
+
+
+            <!--Invoice Start-->
+            <div class="padding">
+                <a href class="btn btn-sm btn-info pull-right hidden-print" onClick="window.print();">Print</a>                
+                {% for details in details %}
+                    <p>Order date: <strong>{{details.timestamp}}</strong><br>
+                        {% if details.renewal_status %}
+                            Order status: <span class="label success">Membership Renewed</span><br>
+                        {% else %}
+                            Order status: <span class="label danger">Membership Not yet Renewed</span><br>
+
+                        {% endif %}
+                        Transaction ID: <strong>{{details.transaction_id}}</strong>
+                    </p>
+                {% endfor %}
+                
+                <div class="table-responsive">
+                  <table class="table table-striped white b-a">
+                    <thead>
+                      <tr>
+                        
+                        <th>Membership Type</th>
+                        <th style="width: 140px">UNIT PRICE</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,value in renewal_amount.items %}
+                        <tr>
+
+                            
+                            <td>{{ key }}</td>
+                            <td>BDT {{ value }}</td>
+                            
+                            </tr>
+                        {% endfor %}
+                        
+                        
+                      
+                      
+                      <tr>
+                        <td colspan="3" class="text-right no-border"><strong>Total</strong></td>
+                        <td><strong>BDT {{total_amount}}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>          
+              </div>
+            <!--Invoice End-->
+            <!--Buttons-->
+            <div style="justify-content:center;text-align:center;">  
+                <div class="btn-container">
+                  <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Delete</button>
+                    {% for i in details %}
+                        {% if i.renewal_status %}
+                            <button type="submit" disabled class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Renew Membership</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Renew Membership</button>
+
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <!--Button End-->
+
+            <!--Renew Membership Modal-->
+            <div id="m-s-a" class="modal" data-backdrop="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Renew Membership of {{name}}</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Are you sure to renew the Membership based on the IEEE ID?</p>
+                      {% for i in details %}
+                      <p>This will update their membership status for 1 year with - {{i.ieee_id}}</p>
+                      {% endfor %}
+                      <p>If the IEEE ID is not registered in the IEEE NSU SB Registered Member Database, it would not make any effect. Renewal Data will be kept stored in the system</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn success p-x-md" name="renew_button" value="Renew"></input>  
+                      </form>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Renew Membership Modal End-->
+
+            <!--Delete Modal-->
+            <div id="m-s-b" class="modal" data-backdrop="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Renewal Application</h5>
+                    </div>
+                    <div class="modal-body p-lg">
+                      <p>Are you sure to execute this action?</p>
+                      <p>This will delete the Renewal Application of {{name}}.</p>
+                      <p>This will not effect if the Member is registered in the IEEE NSU SB Registered Members Database</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn danger p-x-md" name="delete_button" value="Delete"></input>
+                      </form>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div>
+            </div>
+            <!--Delete Modal End-->
+
+        </div>
+        <!--PAGE END-->
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+</body>
+</html>
