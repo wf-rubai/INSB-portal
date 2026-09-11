@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    {% if is_branch %}
+    <title>Update Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+
+
+    <style>
+
+        body, html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .btn-container {
+            text-align: center;
+        }
+        
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width: 80%; 
+            height: 90%; 
+            z-index: 1500;
+        }
+        @media screen and (max-width:700px){
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width:100%;
+            }
+        }
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
+        .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% if is_branch %}
+              {% block navbar %}
+                  {% include 'navbar.html' %}
+              {% endblock navbar %}
+            {% else %}
+              {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+              {% endblock sc_ag_navbar %}
+            {% endif %}
+          </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+            
+            <div class="container">
+                <br>
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                    style="color:#00629B;">{{event_details.event_name}}</b></span></h2>
+                
+            
+                <h6>Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
+                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
+                </ol></b>
+
+                <br>
+
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
+
+                <br>
+            </div>
+            <!--Back Arrow-->
+
+            <div class="tooltip-container">
+                {% if is_branch %}
+                <a href="{% url 'central_branch:event_control' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% else %}
+                <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% endif %}
+                <span class="tooltip-text">Go back to Events</span>
+            </div>
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
+            <br>
+            <div class="btn-container">
+                {% if is_branch %}
+                <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
+                {% else %}
+                    {% if has_access_for_sc_ag_updates %}
+                    <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
+                    {% endif %}
+                {% endif %}
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#previewModal" style="margin-bottom:15px">Preview Event</button>
+            </div>
+
+            <!-- Confirm Delete Modal -->
+            <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this event?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-outline-danger buttons"  value="Delete" name="delete_event">
+                            <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Preview Event Modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg preview_modal_box" role="document">
+                    <div class="modal-content" style="width: 100%; height: 100%;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel">Preview Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {% if is_branch %}
+                            <iframe src="{% url 'central_branch:event_preview' event_id %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            {% else %}
+                            <iframe src="{% url 'chapters_and_affinity_group:event_preview' primary event_id %}" style="width: 100%; height: 100%;" loading="lazy"></iframe>
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <br><br>  
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+            <br>
+            
+            {% block event_edit_form %}
+                {% include "Events/event_edit_details_form_content.html" %}
+            {% endblock event_edit_form %}
+                            
+                            
+
+
+        </div>
+        <!--PAGE END-->
+
+        
+        
+        
+
+        
+
+    
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'tab_view.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+    
+
+</body>
+</html>
