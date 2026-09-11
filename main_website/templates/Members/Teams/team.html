@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+
+    <title>{{team.team_name}} - IEEE NSU SB</title>
+    <link rel="icon" href="{% static 'upload/logo.gif' %}"/>
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!--Common CSS-->
+    {% block common_css %}
+        {% include "common_css_includes.html" %}
+    {% endblock common_css %}
+
+    <!--Extra CSS-->
+
+
+    <style>
+        .gdlr-header-inner,
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+            background-color: 	#002855;
+        }
+
+        .gdlr-header-wrapper.header-style-3-wrapper,
+        .gdlr-header-wrapper.header-style-7-wrapper {
+            background-color: #002855;
+        }
+
+        .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+            background-color: #002855;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .gdlr-header-wrapper.header-style-5-wrapper {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-5-wrapper .gdlr-header-inner {
+                background-color: #002855;
+            }
+
+            .gdlr-header-wrapper.header-style-6-wrapper {
+                background-color: #002855;
+            }
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button {
+            background-color: #002855;
+        }
+        #gdlr-responsive-navigation.dl-menuwrapper button:hover, #gdlr-responsive-navigation.dl-menuwrapper button.dl-active, #gdlr-responsive-navigation.dl-menuwrapper ul {
+            background-color: #002855;
+        }
+        .dl-menuwrapper li a {
+            display: block;
+            position: relative;
+            padding: 15px 20px;
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 300;
+            color: #fff;
+            outline: none;
+        }
+        .dl-menuwrapper li.dl-back:after, .dl-menuwrapper li > a:not(:only-child):after {
+            position: absolute;
+            top: 0;
+            line-height: 50px;
+            font-family: 'FontAwesome';
+            speak: none;
+            -webkit-font-smoothing: antialiased;
+            content: "\f105";
+            font-size: 16px;
+            color: #ffffff;
+        }
+        a{
+            text-decoration:none;
+        }
+        .volunteerDiv, .inchargeDiv{
+            display: flex;
+            justify-content: center;
+        }
+        .startingDiv{
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            max-width: 1140px;
+        }
+        @media screen and (max-width: 800px) {
+            .startingDiv{
+                grid-template-columns: 1fr;
+                justify-items: center;
+            } 
+        }
+    </style>
+</head>
+{% block preloader %}
+    {% include 'preloader.html' %}
+{% endblock preloader %}
+<body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    <div class="body-wrapper  float-menu">
+        
+        {% block header %}
+            {% include 'header.html' %}
+        {% endblock header %}
+        
+        {% block wave_design %}
+            {% include 'wave.html' %}
+        {% endblock wave_design %}
+
+        <!--Start adding from here-->
+        <div style="display: flex; justify-content: center;">
+            <div class="startingDiv">
+                {% block team_coordinators %}
+                    {% include "Members/Teams/team_coordinators.html" %}
+                {% endblock team_coordinators %}
+                {% block team_pic %}
+                    {% include "Members/Teams/team_picture.html" %}
+                {% endblock team_pic %}
+            </div>
+        </div>
+
+        <div class="inchargeDiv">
+            {% block team_incharges %}
+                {% include "Members/Teams/team_incharges.html" %}
+            {% endblock team_incharges %}
+        </div>
+
+        <div class="volunteerDiv">
+            {% block team_volunteers %}
+                {% include "Members/Teams/team_volunteers.html" %}
+            {% endblock team_volunteers %}
+        </div>
+    </div>
+        <br>
+        <br>
+        {% block footer %}
+            {% include "footer_block.html" %}
+        {% endblock footer %}
+        
+    {% block common_js %}
+        {% include "common_js_includes.html" %}
+    {% endblock %}
+</body>
+
+</html>

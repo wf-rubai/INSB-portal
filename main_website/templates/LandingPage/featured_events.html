@@ -1,0 +1,57 @@
+{% load static %}
+{% block featured_events %}
+<section id="content-section-4">
+    <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
+        style="background-color: #ffffff; padding-top: 50px; padding-bottom: 50px; ">
+        <div style="display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;">
+            <h1 class="gdlr-heading-shortcode "
+                style="font-size: 46px;font-weight: bold; text-align:center; color: #000;">Featured
+                Events</h1>
+            <div class="bar"
+                style="background-color: #002855; width: 200px; height: 5px; text-align: center; border-radius: 5px;">
+            </div>
+        </div>
+
+
+        <div class="container">
+
+            <div class="portfolio-item-wrapper type-modern-portfolio" data-ajax="">
+                <div class="portfolio-item-holder  gdlr-portfolio-column-3">
+                    <div class="gdlr-isotope" data-type="portfolio" data-layout="fitRows">
+                        <div class="clear"></div>
+                        {% for i in featured_events %}
+                        <div class="four columns">
+                            <div class="gdlr-item gdlr-portfolio-item gdlr-modern-portfolio">
+                                <div class="gdlr-ux gdlr-modern-portfolio-ux">
+                                    <div class="portfolio-thumbnail gdlr-image"><img
+                                            src="/media_files/{{i.banner_image}}" alt="event_banner" width="540"
+                                            height="326" /><span
+                                            class="portfolio-overlay">&nbsp;</span>
+                                        <div class="portfolio-overlay-content">
+                                            <h3 class="portfolio-title"><a href="{% url 'main_website:event_details' i.featured_event.pk %}">{{i.featured_event.event_name}}</a>
+                                            </h3>
+                                        
+                                        </div><a class="portfolio-overlay-icon"
+                                            href="/media_files/{{i.banner_image}}" data-rel="fancybox"><span
+                                                class="portfolio-icon"><i
+                                                    class="fa fa-search"></i></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</section>
+{% endblock featured_events %}

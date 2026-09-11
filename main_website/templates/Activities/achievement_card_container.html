@@ -1,0 +1,87 @@
+{% load static %}
+
+{% block achievement_card_container %}
+
+<style>
+
+    {% comment %} .achievement_card{
+        height: 425px;
+    } {% endcomment %}
+
+    .card-img-top {
+        object-fit: cover;
+        height: 250px; /* Set a fixed height for the image */
+    }
+
+    .card-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show 2 lines of text */
+        -webkit-box-orient: vertical;
+        height: ;
+    }
+
+    .description-container {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        min-height: 45px;
+    }
+
+    .description-container.collapsed,
+    .card-title.collapsed {
+        -webkit-line-clamp: unset;
+    }
+</style>
+<div class="container">
+    <div class="row m-0">
+
+        <!-- Repeat the card -->
+        {% for i in achievements %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+            <div class="card shadow achievement_card">
+                <img class="card-img-top" src="/media_files/{{i.award_picture}}" alt="">
+
+                <div class="position-absolute">
+                    <span style="background-color: #00629B;" class=" text-white px-3 py-2 rounded h6">{{i.award_winning_year}}</span>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mt-2">{{i.award_name}} - <span style="color:{{i.award_of.primary_color_code}};">{{i.award_of.group_name}}</span></h5>
+                    <div class="description-container">
+                        <p class="card-text">{{i.award_description|safe}}</p>
+                    </div>
+                    <a href="#" class="read-more-link" >Read More</a>
+
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br><br>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $(".read-more-link").click(function (e) {
+            e.preventDefault();
+
+            var cardBody = $(this).closest('.card-body');
+            var isCollapsed = cardBody.find('.card-title').hasClass('collapsed');
+
+            cardBody.find('.card-title').toggleClass('collapsed', !isCollapsed);
+            cardBody.find('.description-container').toggleClass('collapsed', !isCollapsed);
+
+            // Change "Read More" to "Read Less" based on the collapsed state
+            var linkText = isCollapsed ? "Read More" : "Read Less";
+            $(this).text(linkText);
+        });
+    });
+</script>
+{% endblock achievement_card_container %}

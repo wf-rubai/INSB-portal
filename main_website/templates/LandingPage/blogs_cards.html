@@ -1,0 +1,94 @@
+{% load static %}
+{% block blogs_cards %}
+<style>
+    a{
+        color: 	#FFC72C;
+    }
+    a:hover{
+        color: 	#002855;
+    }
+</style>
+<section id="content-section-10">
+    <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
+        style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
+        <div class="container">
+            <div
+                class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
+                <div class="gdlr-item-title-container container">
+                    <div class="gdlr-item-title-head">
+                        <h3 class="gdlr-item-title gdlr-skin-title gdlr-skin-border">Recent Blogs
+                        </h3><a class="gdlr-item-title-link" href="{% url 'main_website:blogs' %}">Read All Blogs</a><span
+                            class="gdlr-nav-title"><i class="icon-angle-left gdlr-flex-prev"></i><i
+                                class="icon-angle-right gdlr-flex-next"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="blog-item-wrapper">
+                <div class="blog-item-holder">
+                    <div class="gdlr-blog-carousel-item gdlr-item">
+                        <div class="flexslider" data-type="carousel"
+                            data-nav-container="blog-item-wrapper" data-columns="3">
+                            <ul class="slides">
+                                {% comment %} Dynamic Blog Starts here {% endcomment %}
+                                {% for i in recent_blogs %}
+                                <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
+                                    
+                                    <article id="post-2255"
+                                        class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                                        <div class="gdlr-standard-style">
+                                            <div class="gdlr-blog-thumbnail">
+                                                <a href="{% url 'main_website:blog_description' i.pk %}"><img src="/media_files/{{i.blog_banner_picture}}" alt="blog_thumbnail" width="400" height="300" /></a>
+                                            </div>
+
+                                            <div class="gdlr-blog-grid-content">
+                                                <header class="post-header">
+                                                    <div class="gdlr-blog-info">
+                                                        <div
+                                                            class="blog-info blog-date gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span>{{i.date}}</div>
+                                                        <div
+                                                            class="blog-info blog-author gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span>By {{i.writer_name}}</div>
+                                                        <div class="clear"></div>
+                                                    </div>
+
+                                                    <h3 class="gdlr-blog-title"><a href="{% url 'main_website:blog_description' i.pk %}">{{i.title}}</a></h3>
+                                                    <div class="clear"></div>
+                                                </header>
+                                                <!-- entry-header -->
+
+                                                <div class="gdlr-blog-content">
+                                                    <div class="clear"></div><a href="{% url 'main_website:blog_description' i.pk %}"
+                                                        class="excerpt-read-more">Read More</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <!-- #post -->
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flexslider/2.7.2/jquery.flexslider.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.flexslider').flexslider({
+            animation: 'slide',
+            controlNav: true, // Set this to true to enable carousel navigation buttons
+            directionNav: true,
+        });
+    });
+</script>
+
+{% endblock blogs_cards %}

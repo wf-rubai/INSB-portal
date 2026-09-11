@@ -1,0 +1,97 @@
+{% block online_news %}
+{% load static %}
+<style>
+    .gdlr-blog-thumbnail{
+        height: 200px;
+        width: 100%;
+        overflow: hidden;
+    }
+    .flexslider .slides img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+<section id="content-section-10">
+    <div class="gdlr-color-wrapper  gdlr-show-all no-skin"
+    style="background-color: #f7f7f7; padding-top: 70px; padding-bottom: 10px; ">
+    <div class="container">
+            <h3 style="color:#00629B;text-align:center;">Online News</h3>
+            <div
+                class="gdlr-item-title-wrapper gdlr-item  gdlr-nav-container gdlr-left gdlr-medium ">
+                <div class="gdlr-item-title-container container">
+                    <div class="gdlr-item-title-head">
+                        <span class="gdlr-nav-title">
+                            <i class="icon-angle-left gdlr-flex-prev"></i>
+                            <i class="icon-angle-right gdlr-flex-next"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="blog-item-wrapper">
+                <div class="blog-item-holder">
+                    <div class="gdlr-blog-carousel-item gdlr-item">
+                        <div class="flexslider" data-type="carousel"
+                            data-nav-container="blog-item-wrapper" data-columns="3">
+                            <ul class="slides">
+                                {% comment %} Dynamic News Starts {% endcomment %}
+                                {% for i in all_online_news %}
+                                <li class="gdlr-item gdlr-blog-grid gdlr-skin-box">
+                                    <article id="{{i.article_id}}"
+                                        class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style">
+                                        <div class="gdlr-standard-style">
+                                            <div class="gdlr-blog-thumbnail">
+                                                <a href="{{i.article_link}}"> <img
+                                                        src="{{i.article_picture}}"
+                                                        alt="blog_thumbnail" width="400" height="300" /></a>
+                                            </div>
+
+                                            <div class="gdlr-blog-grid-content">
+                                                <header class="post-header">
+                                                    <div class="gdlr-blog-info">
+                                                        <div
+                                                            class="blog-info blog-date gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span>{{i.pubDate}}</div>
+                                                        <div
+                                                            class="blog-info blog-author gdlr-skin-info">
+                                                            <span class="gdlr-sep">/</span>By <a
+                                                                href="{{i.article_link}}" title="Posts by {{i.article_creator}}"
+                                                                rel="author">{{i.article_creator}}</a></div>
+                                                        <div class="clear"></div>
+                                                    </div>
+
+                                                    <h3 class="gdlr-blog-title"><a href="{{i.article_link}}">{{i.title}}</a></h3>
+                                                    <div class="clear"></div>
+                                                </header>
+                                                <!-- entry-header -->
+
+                                                <div class="gdlr-blog-content" style="display: -webkit-box;
+                                                overflow: hidden;
+                                                -webkit-box-orient: vertical;
+                                                text-overflow: ellipsis;
+                                                -webkit-line-clamp: 2;">{{i.article_description}}</div>
+
+                                                    <div class="clear">
+
+                                                    </div>
+                                                    <a href="{{i.article_link}}"
+                                                        class="excerpt-read-more">Read More</a>
+                                            </div>
+                                        </div>
+                                    </article>
+                                    <!-- #post -->
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</section>
+{% endblock online_news %}

@@ -1,0 +1,70 @@
+{% load static %}
+
+{% block team_tabs %}
+<style>
+    .link-container {
+        width: 100%; /* Set the width of the container to 100% */
+      }
+      
+      .links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .links a {
+        margin: 5px!important; /* Add some spacing between the links */
+      }
+      
+      .links a:last-child {
+        min-width: max-content;
+      }
+      .links a.active {
+            color: #FFA300;
+      }
+      @media screen and (max-width: 768px){
+        .links{
+          flex-wrap: nowrap;
+          overflow-x: scroll;
+          justify-content: flex-start;
+        }
+        .links2{
+          width: 100%;
+        }
+        ::-webkit-scrollbar {
+          height: 0px;
+        }
+      }
+</style>
+<!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // Get the current page's URL
+      const currentPageUrl = window.location.href;
+    
+      // Find the links in the navigation bar
+      const navLinks = document.querySelectorAll(".links a");
+    
+      // Loop through the links and add a "active" class to the matching link
+      navLinks.forEach(function (link) {
+        if (link.href === currentPageUrl) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+<div class="link-container" style="text-align:center;">
+        <div class="links">
+          <div class="links2">
+            <a href="{% url 'main_website:officer_page' %}" class="btn btn-outline-warning text-dark m-1">All Officers</a>
+          </div>
+              {% for team in teams %}
+              <div class="links2">
+                <a href="{% url 'main_website:team_officer' team.primary %}" class="btn btn-outline-warning text-dark m-1">{{team.team_name}}</a>
+              </div>
+              {% endfor %}
+          </div>
+
+      
+</div>
+{% endblock team_tabs %}
